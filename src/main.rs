@@ -96,7 +96,11 @@ async fn handle_stream(rules: Arc<Rules>, mut stream: TcpStream) -> Result<(), B
 
   reader.take(RECORD_HEADER_LENGTH);
 
-  let handshake = HandshakeMessagePayload::read_version(&mut reader, protocol_version).unwrap();
+  let handshake = match HandshakeMessagePayload::read_version(&mut reader, protocol_version) {
+    Some(handshake) => handshake,
+    None => return Err("could not parse handshake".into()),
+  };
+
   let client_hello = match handshake.payload {
     HandshakePayload::ClientHello(client_hello) => client_hello,
     _ => return Err(rustls::Error::InappropriateHandshakeMessage {
