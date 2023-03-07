@@ -1,2 +1,5 @@
-.idea
-target
+*
+!src
+!Cargo.lock
+!Cargo.toml
+!config.toml
