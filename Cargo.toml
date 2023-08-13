@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+axum = { version = "0.6", default-features = false, features = ["http1", "http2", "original-uri", "tokio"] }
+hyper = "0.14"
 rustls = "0.20"
 serde = { version = "1", features = ["derive"] }
 tokio = { version = "1", features = ["io-util", "macros", "net", "rt-multi-thread"] }

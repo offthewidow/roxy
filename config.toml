@@ -1,4 +1,2 @@
-listen_addr = "0.0.0.0:443"
-
 [rules."example.com"]
 host = "1.2.3.4:5555"
