@@ -162,18 +162,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "repro"
-version = "0.1.0"
-dependencies = [
- "rustls",
- "serde",
- "tokio",
- "toml",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "ring"
 version = "0.16.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -186,6 +174,18 @@ dependencies = [
  "untrusted",
  "web-sys",
  "winapi",
+]
+
+[[package]]
+name = "roxy"
+version = "0.1.0"
+dependencies = [
+ "rustls",
+ "serde",
+ "tokio",
+ "toml",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
