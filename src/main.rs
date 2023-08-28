@@ -124,7 +124,7 @@ async fn handle_stream(rules: Arc<Rules>, mut stream: TcpStream) -> Result<(), B
   let handshake_length = u16::read(&mut reader).unwrap() as usize;
 
   if handshake_length > MAX_HANDSHAKE_LENGTH {
-    return Err(rustls::Error::CorruptMessagePayload(ContentType::Handshake).into());
+    return Err("handshake too long".into());
   }
 
   let mut buf = vec![0; RECORD_HEADER_LENGTH + handshake_length];
@@ -137,10 +137,8 @@ async fn handle_stream(rules: Arc<Rules>, mut stream: TcpStream) -> Result<(), B
 
   reader.take(RECORD_HEADER_LENGTH);
 
-  let handshake = match HandshakeMessagePayload::read_version(&mut reader, protocol_version) {
-    Some(handshake) => handshake,
-    None => return Err("could not parse handshake".into()),
-  };
+  let handshake = HandshakeMessagePayload::read_version(&mut reader, protocol_version)
+    .map_err(|err| Box::<dyn Error>::from(format!("could not parse handshake: {err:?}")))?;
 
   let client_hello = match handshake.payload {
     HandshakePayload::ClientHello(client_hello) => client_hello,
@@ -156,7 +154,7 @@ async fn handle_stream(rules: Arc<Rules>, mut stream: TcpStream) -> Result<(), B
   };
 
   let hostname = match &sni[0].payload {
-    ServerNamePayload::HostName((_, hostname)) => AsRef::<str>::as_ref(hostname),
+    ServerNamePayload::HostName(name) => AsRef::<str>::as_ref(name),
     ServerNamePayload::Unknown(_) => return Err("unknown SNI payload".into()),
   };
 
